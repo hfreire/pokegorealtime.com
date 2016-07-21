@@ -1,0 +1,15 @@
+{
+  "name": "pgo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.14.0",
+    "lodash": "^4.13.1",
+    "pokemon-go-node-api": "git://github.com/Armax/Pokemon-GO-node-api.git"
+  },
+  "devDependencies": {},
+  "scripts": {},
+  "author": "",
+  "license": "ISC"
+}

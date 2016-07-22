@@ -6,7 +6,7 @@ $(document).ready(function () {
   var gymMarkerStore = [];
   var pokemonMarkerStore = [];
 
-  function getGymMarkers () {
+  /*function getGymMarkers () {
     $.get('/gyms', {}, function (res, resp) {
       // Clean the existing markers
       gymMarkerStore = [];
@@ -38,7 +38,7 @@ $(document).ready(function () {
       }
       window.setTimeout(getGymMarkers, 40000);
     }, "json");
-  }
+  }*/
 
   function getPokemonMarkers () {
     $.get('/pokemons', {}, function (res, resp) {
@@ -50,6 +50,7 @@ $(document).ready(function () {
       pokemonMarkerStore.length = 0;
 
       for (i = 0, len = res.length; i < len; i++) {
+
         var marker = new google.maps.Marker({
           position: new google.maps.LatLng(res[ i ].position.lat, res[ i ].position.long),
           title: res[ i ].name,
@@ -59,11 +60,17 @@ $(document).ready(function () {
             origin: new google.maps.Point(0, 0),
             anchor: new google.maps.Point(64, 128)
           },
-          map: map
+          map: map,
         });
 
         pokemonMarkerStore.push(marker);
       }
+
+      var options = {
+        imagePath: 'static/images/markercluster/m',
+        minimumClusterSize: 2
+      };
+      var markerCluster = new MarkerClusterer(map, pokemonMarkerStore, options);
 
       window.setTimeout(getPokemonMarkers, 10000);
     }, "json");
@@ -77,7 +84,7 @@ $(document).ready(function () {
       mapTypeId: google.maps.MapTypeId.ROADMAP,
     });
 
-    getGymMarkers();
+    //getGymMarkers();
     getPokemonMarkers()
   });
 

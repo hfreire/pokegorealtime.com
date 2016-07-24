@@ -11,6 +11,4 @@ COPY package.json /opt/pgo
 RUN npm install --production
 
 # Bundle app source
-COPY src/server /opt/pgo/src
-
-CMD [ "npm", "run server" ]
+COPY src/ /opt/pgo/src

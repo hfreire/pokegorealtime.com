@@ -19,9 +19,15 @@ var Bot = {
 
   stop: function(callback) {
     console.log('Stopping bot');
+
+    if (callback) {
+      callback()
+    }
   },
 
   report: function (error, callback) {
+    console.error("Reporting error");
+    console.error(error);
     console.error(error.stack ? error.stack : error.message)
 
     if (callback) {

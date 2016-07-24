@@ -7,10 +7,15 @@
 
 'use strict';
 
-var _ = require('lodash'),
-  redis = require("redis"),
-  client = redis.createClient(__dirname + '/../../../var/run/redis.sock', {
-    max_attempts: 1
+var _ = require('lodash');
+
+var REDIS = process.env.REDIS || __dirname + '/../../../var/run/redis.sock';
+
+var redis = require("redis"),
+  client = redis.createClient(REDIS, {
+    retry_strategy: function () {
+      return 10000;
+    }
   });
 
 exports.getGymMarkers = function (callback) {
@@ -55,14 +60,19 @@ exports.getGymMarkers = function (callback) {
 exports.getPokemonMarkers = function (callback) {
 
   function pokemonToMarker (pokemon) {
+    if (!pokemon || !pokemon.EncounterId) {
+      return;
+    }
+
     return {
       id: pokemon.EncounterId,
-      title: pokemon.name,
-      icon: pokemon.img,
+      name: pokemon.name,
+      image_url: pokemon.img,
       position: {
         lat: pokemon.Latitude,
         long: pokemon.Longitude
-      }
+      },
+      expire_at: pokemon.ExpirationTimeMs
     };
   }
 
@@ -81,7 +91,10 @@ exports.getPokemonMarkers = function (callback) {
         client.mget(result, function (error, reply) {
           if (callback) {
             callback(_.map(reply, function (pokemon) {
-              return pokemonToMarker(JSON.parse(pokemon));
+              var marker = pokemonToMarker(JSON.parse(pokemon));
+              if (marker) {
+                return marker;
+              }
             }));
           }
 

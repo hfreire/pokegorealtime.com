@@ -9,9 +9,13 @@
 var Pokeio = require('./api/poke.io');
 var _ = require('lodash');
 
+var REDIS = process.env.REDIS || __dirname + '/../../../var/run/redis.sock';
+
 var redis = require("redis"),
-  client = redis.createClient(__dirname + '/../../../var/run/redis.sock', {
-    max_attempts: 1
+  client = redis.createClient(REDIS, {
+    retry_strategy: function () {
+      return 10000;
+    }
   });
 
 var Walker = require('../pokemon/walker');
@@ -23,32 +27,30 @@ var location = {
   name: process.env.PGO_LOCATION || 'Jakobsbergsgatan 16, 111 44, Stockholm, Sweden'
 };
 
-var username = process.env.PGO_USERNAME || 'hfreire@exec.sh';
-var password = process.env.PGO_PASSWORD || 'e3Q2tEp30VtkyzOSg8TS6c36aE1I5Esj';
-var provider = process.env.PGO_PROVIDER || 'google';
-
-//username = process.env.PGO_USERNAME || 'marcocuci@gmail.com';
-//password = process.env.PGO_PASSWORD || 'a5dlnlkvcupbbahuk8tjhfuq';
-//provider = process.env.PGO_PROVIDER || 'google';
-
-username = process.env.PGO_USERNAME || 'gberggren1978@gmail.com';
-password = process.env.PGO_PASSWORD || '9oJwCBX9pOh0uCoyaxLaTEnaRfr64wlr';
-provider = process.env.PGO_PROVIDER || 'google';
+var username = process.env.PGO_USERNAME
+var password = process.env.PGO_PASSWORD
+var provider = process.env.PGO_PROVIDER
 
 function lookAround (callback) {
-  var startTime = new Date();
 
   Pokeio.Heartbeat(function (error, heartbeat) {
-    var endTime = new Date();
-
     if (error) {
-      throw error;
+      return callback(error);
     }
+
+    var summary = {
+      cells: 0,
+      pokestops: 0,
+      gyms: 0,
+      pokemons: 0
+    };
 
     function _processCell (cell) {
       _.forEach(cell.Fort, _processFort);
 
       _.forEach(cell.MapPokemon, _processPokemon);
+
+      summary.cells++;
     }
 
     function _processFort (fort) {
@@ -57,9 +59,11 @@ function lookAround (callback) {
         client.set("pokestop:" + pokestop.FortId.toString(), JSON.stringify(pokestop),
           function (error) {
             if (error) {
-              console.error(error);
+              console.error(error.stack);
             }
           });
+
+        summary.pokestops++;
 
       } else {
         var gym = fort;
@@ -69,6 +73,8 @@ function lookAround (callback) {
               console.error(error);
             }
           });
+
+        summary.gyms++;
       }
     }
 
@@ -107,38 +113,57 @@ function lookAround (callback) {
             });
         }
       });
+
+      summary.pokemons++;
     }
 
     _.forEach(heartbeat.cells, _processCell);
 
-    callback();
+    callback(null, summary);
   });
 }
 
 function searchForPointsOfInterest (latitude, longitude) {
 
-  var location = Walker.walk(latitude, longitude);
+  var destination = Walker.walk(latitude, longitude);
 
-  Pokeio.playerInfo.latitude = location.latitude;
-  Pokeio.playerInfo.longitude = location.longitude;
+  Pokeio.playerInfo.latitude = destination.latitude;
+  Pokeio.playerInfo.longitude = destination.longitude;
 
-  lookAround(function () {
-    setTimeout(searchForPointsOfInterest, 20000);
+  lookAround(function (error, summary) {
+    if (error) {
+      console.error(error);
+
+      // error? start again
+      start(username, password, location, provider);
+
+    } else {
+
+      console.log(new Date() + ' ' + JSON.stringify(destination) + ' ' + JSON.stringify(summary));
+
+      setTimeout(searchForPointsOfInterest, (Math.floor(Math.random()*(10-5+1)+5))*1000);
+    }
   });
 }
 
-Pokeio.init(username, password, location, provider, function (error) {
-  if (error) {
-    throw error;
-  }
+function start (username, password, location, provider) {
 
-  console.log('Current location: ' + Pokeio.playerInfo.locationName + ' (' + Pokeio.playerInfo.latitude + ', ' + Pokeio.playerInfo.longitude + ', ' + Pokeio.playerInfo.altitude + ')');
-
-  Pokeio.GetProfile(function (error, profile) {
+  Pokeio.init(username, password, location, provider, function (error) {
     if (error) {
       throw error;
     }
 
-    searchForPointsOfInterest(Pokeio.playerInfo.latitude, Pokeio.playerInfo.longitude);
+    console.log('Current location: ' + Pokeio.playerInfo.locationName + ' (' + Pokeio.playerInfo.latitude + ', ' + Pokeio.playerInfo.longitude + ', ' + Pokeio.playerInfo.altitude + ')');
+
+    Pokeio.GetProfile(function (error, profile) {
+      if (error) {
+        throw error;
+      }
+
+      searchForPointsOfInterest(Pokeio.playerInfo.latitude, Pokeio.playerInfo.longitude);
+    });
   });
-});
+}
+
+start(username, password, location, provider);
+

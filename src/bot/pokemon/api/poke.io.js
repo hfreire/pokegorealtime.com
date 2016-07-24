@@ -268,7 +268,7 @@ function Pokeio() {
                 return callback(err);
             }
             else if (!f_ret || !f_ret.payload || !f_ret.payload[0]) {
-                return callback('No result');
+                return callback(new Error('No result'));
             }
 
             var heartbeat = ResponseEnvelop.HeartbeatPayload.decode(f_ret.payload[0]);

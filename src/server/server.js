@@ -7,7 +7,8 @@
 
 var express = require('express');
 
-var controller = require('./controllers/controller');
+var controller = require('./controllers/controller'),
+  routeController = require('./controllers/routes');
 
 var Server = {
 
@@ -17,25 +18,37 @@ var Server = {
     console.log('Starting server');
 
     this._http = express();
+    this._http.set('x-powered-by', false);
 
     this._http.use('/static', express.static(__dirname + "/public", { maxAge: 86400000 }));
 
     this._http.get('/', function (req, res) {
+      res.redirect('/stockholm');
+    });
+
+    this._http.get('/stockholm', function (req, res) {
       res.sendfile(__dirname + "/views/index.html");
     });
 
-    this._http.get('/gyms', function (req, res) {
+    this._http.get('/api/gyms', function (req, res) {
       controller.getGymMarkers(function (result) {
         res.send(JSON.stringify(result));
       });    });
 
-    this._http.get('/pokemons', function (req, res) {
+    this._http.get('/api/pokemons', function (req, res) {
       controller.getPokemonMarkers(function (result) {
         res.send(JSON.stringify(result));
       });
     });
 
-    this._http.listen(3000);
+    this._http.get('/api/routes', routeController.getRoute);
+
+    this._http.get('/robots.txt', function (req, res) {
+      res.type('text/plain');
+      res.send("User-agent: *");
+    });
+
+    this._http.listen(61234);
 
     if (callback) {
       callback()

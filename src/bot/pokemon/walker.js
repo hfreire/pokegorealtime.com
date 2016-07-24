@@ -26,10 +26,12 @@ function Walker() {
         }
       }
 
-      var stepSize = 0.0015;
-      var stepLimit = 49;
+      var stepSize = 0.0035;
+      var stepLimit = 64;
 
       path = this._generateSpiral(startLocation.latitude, startLocation.longitude, stepSize, stepLimit);
+
+      console.log(new Date() + ' Walking new path: ' + JSON.stringify(path));
     }
 
     var location = path[0];
@@ -38,7 +40,7 @@ function Walker() {
     return location;
   };
 
-  this._generateSpiral = function (latitude, longitude, stepSize, stepLimit) {
+  this._generateSpiral =       function spiral(latitude, longitude, stepSize, stepLimit) {
     var coords = [{latitude: latitude, longitude: longitude}]
     var steps = 1, x = 0, y = 0, d = 1, m = 1;
     var rlow = 0.0
@@ -52,7 +54,7 @@ function Walker() {
         var lng = y * stepSize + longitude + (Math.random() * (rhigh - rlow) + rlow);
         coords.push({ latitude: lat, longitude: lng })
       }
-      while (2 * y * d < m && steps < stepLimit) {
+      while (0.7 * y * d < m && steps < stepLimit) {
         y = y + d
         steps += 1
         var lat = x * stepSize + latitude + (Math.random() * (rhigh - rlow) + rlow);

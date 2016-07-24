@@ -4,12 +4,28 @@
   "description": "",
   "main": "app.js",
   "dependencies": {
+    "bignum": "^0.12.5",
+    "bluebird": "^3.4.1",
+    "bytebuffer": "^5.0.1",
     "express": "^4.14.0",
+    "geocoder": "^0.2.2",
+    "google-distance": "^1.0.1",
+    "gpsoauthnode": "^0.0.5",
     "lodash": "^4.13.1",
-    "pokemon-go-node-api": "git://github.com/Armax/Pokemon-GO-node-api.git"
+    "long": "^3.1.0",
+    "protobufjs": "^5.0.1",
+    "redis": "^2.6.2",
+    "request": "^2.73.0",
+    "simple-s2-node": "^0.0.2"
   },
   "devDependencies": {},
-  "scripts": {},
+  "scripts": {
+    "bot": "$(which node) src/bot/app.js",
+    "server": "$(which node) src/server/app.js",
+    "build": "$(which docker) build -t registry.exec.sh/pgo -f ./share/docker/Dockerfile .",
+    "push": "$(which docker) push registry.exec.sh/pgo",
+    "deploy": "$(which ansible-playbook) -i ./share/ansible/hosts ./share/ansible/playbook.yml"
+  },
   "author": "",
   "license": "ISC"
 }

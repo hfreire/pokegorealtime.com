@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Simple Polylines</title>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+
+      // This example creates a 2-pixel-wide red polyline showing the path of William
+      // Kingsford Smith's first trans-Pacific flight between Oakland, CA, and
+      // Brisbane, Australia.
+
+      function spiral(latitude, longitude, stepSize, stepLimit) {
+        var coords = [{lat: latitude, lng: longitude}]
+        var steps = 1, x = 0, y = 0, d = 1, m = 1;
+        var rlow = 0.0
+        var rhigh = 0.0005
+
+        while (steps < stepLimit) {
+          while (2 * x * d < m && steps < stepLimit) {
+            x = x + d
+            steps += 1
+            var lat = x * stepSize + latitude + (Math.random() * (rhigh - rlow) + rlow);
+            var lng = y * stepSize + longitude + (Math.random() * (rhigh - rlow) + rlow);
+            coords.push({ lat: lat, lng: lng })
+          }
+          while (0.7 * y * d < m && steps < stepLimit) {
+            y = y + d
+            steps += 1
+            var lat = x * stepSize + latitude + (Math.random() * (rhigh - rlow) + rlow);
+            var lng = y * stepSize + longitude + (Math.random() * (rhigh - rlow) + rlow);
+            coords.push({ lat: lat, lng: lng })
+          }
+
+          d = -1 * d;
+          m = m + 1;
+
+        }
+        return coords
+      }
+
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 14,
+          center: {lat: 59.33935499999999, lng: 18.0951912},
+          mapTypeId: google.maps.MapTypeId.TERRAIN
+        });
+
+        var flightPlanCoordinates = spiral(59.3351613, 18.0708009, 0.0030, 64);
+        var flightPath = new google.maps.Polyline({
+          path: flightPlanCoordinates,
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath.setMap(map);
+
+        var flightPlanCoordinates1 = spiral(59.329965,18.11813, 0.0030, 64);
+        var flightPath1 = new google.maps.Polyline({
+          path: flightPlanCoordinates1,
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath1.setMap(map);
+
+        var flightPlanCoordinates2 = spiral(59.31701,18.06515, 0.0030, 64);
+        var flightPath2 = new google.maps.Polyline({
+          path: flightPlanCoordinates2,
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath2.setMap(map);
+
+        var flightPlanCoordinates3 = spiral(59.31563680000001, 18.0356296, 0.0035, 64);
+        var flightPath3 = new google.maps.Polyline({
+          path: flightPlanCoordinates3,
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath3.setMap(map);
+
+        var flightPlanCoordinates4 = spiral(59.34501,18.02015, 0.0030, 64);
+        var flightPath4 = new google.maps.Polyline({
+          path: flightPlanCoordinates4,
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath4.setMap(map);
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?callback=initMap&key=AIzaSyBjTwYHBjB3nQaK4f6xqQsm0OQwNEY5fVM">
+    </script>
+  </body>
+</html>

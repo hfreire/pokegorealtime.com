@@ -27,7 +27,7 @@ var Server = {
     });
 
     this._http.get('/stockholm', function (req, res) {
-      res.sendfile(__dirname + "/views/index.html");
+      res.sendfile(__dirname + "/public/index.html");
     });
 
     this._http.get('/api/gyms', function (req, res) {
@@ -45,7 +45,7 @@ var Server = {
 
     this._http.get('/robots.txt', function (req, res) {
       res.type('text/plain');
-      res.send("User-agent: *");
+      res.send("User-agent: *\nDisallow: /api/");
     });
 
     this._http.listen(61234);

@@ -1,0 +1,29 @@
+html {
+    height: 100%
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+#firstHeading {
+    color: gray;
+    font-size: 2.0em;
+    margin: 0.5em;
+}
+
+#bodyContent {
+    text-align: center;
+}
+
+.gm-style-iw {
+    text-align: center;
+}

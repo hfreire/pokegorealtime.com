@@ -5,7 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var express = require('express');
+var express = require('express'),
+    path = require('path');
 
 var controller = require('./controllers/controller'),
   routeController = require('./controllers/routes');
@@ -20,14 +21,14 @@ var Server = {
     this._http = express();
     this._http.set('x-powered-by', false);
 
-    this._http.use('/static', express.static(__dirname + "/public", { maxAge: 86400000 }));
+    this._http.use('/static', express.static(path.resolve(__dirname + "/../app"), { maxAge: 86400000 }));
 
     this._http.get('/', function (req, res) {
       res.redirect('/stockholm');
     });
 
     this._http.get('/stockholm', function (req, res) {
-      res.sendfile(__dirname + "/public/index.html");
+      res.sendfile(path.resolve(__dirname + "/../app/index.html"));
     });
 
     this._http.get('/api/gyms', function (req, res) {

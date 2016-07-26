@@ -11,4 +11,6 @@ COPY package.json /opt/pgo
 RUN npm install --production
 
 # Bundle app source
-COPY src/ /opt/pgo/src
+COPY src/bot /opt/pgo/src/bot
+COPY src/server /opt/pgo/src/server
+COPY var/tmp/app /opt/pgo/src/app

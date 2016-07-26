@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="PokeGoRealtime">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>Pokémon Go Realtime</title>
+
+    <meta name="robots" content="follow">
+    <meta name="description" content="Discover Pokémons nearby in realtime">
+
+    <link rel="canonical" href="https://pokegorealtime.com" itemprop="url">
+    <link rel="publisher" href="https://pokegorealtime.com">
+    <link rel="image_src" href="https://pokegorealtime.com/static/images/touch-icon-192x192.png">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Pokémon Go Realtime">
+    <meta property="og:site_name" content="Pokémon Go Realtime">
+    <meta property="og:url" content="https://pokegorealtime.com">
+    <meta property="og:description" content="Discover Pokémons nearby in realtime">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://pokegorealtime.com/static/images/touch-icon-192x192.png">
+
+    <meta itemprop="name" content="Pokémon Go Realtime">
+    <meta itemprop="thumbnailUrl" content="https://pokegorealtime.com/static/images/touch-icon-192x192.png">
+    <meta itemprop="image" content=https://pokegorealtime.com/static/images/touch-icon-192x192.png">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,shrink-to-fit=no">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Pokémon Go Realtime">
+    <meta name="application-name" content="Pokémon Go Realtime">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="google" content="notranslate">
+
+    <link rel="shortcut icon" href="static/favicon.ico">
+    <link rel="icon" sizes="192x192" href="static/images/touch-icon-192x192.png">
+    <link rel="apple-touch-icon" href="static/images/apple-touch-icon.png">
+
+    <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- build:css styles/app.css -->
+    <link rel="stylesheet" href="../../bower_components/materialize/dist/css/materialize.css">
+    <link rel="stylesheet" href="styles/app.css">
+    <!-- endbuild -->
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<script src="//maps.google.com/maps/api/js?key=AIzaSyBjTwYHBjB3nQaK4f6xqQsm0OQwNEY5fVM"></script>
+<!-- build:js scripts/app.js -->
+<script src="../../bower_components/jquery/dist/jquery.js"></script>
+<script src="../../bower_components/angular/angular.js"></script>
+<script src="../../bower_components/js-marker-clusterer/src/markerclusterer.js"></script>
+<script src="../../bower_components/moment/moment.js"></script>
+<script src="../../bower_components/materialize/dist/js/materialize.js"></script>
+<script src="scripts/geolocation-marker.js"></script>
+<script src="scripts/app.js"></script>
+<!-- endbuild -->
+
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i[ 'GoogleAnalyticsObject' ] = r;
+        i[ r ] = i[ r ] || function () {
+                    (i[ r ].q = i[ r ].q || []).push(arguments)
+                }, i[ r ].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[ 0 ];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-81195535-1', 'auto');
+    ga('send', 'pageview');
+</script>
+</body>
+</html>

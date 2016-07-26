@@ -1,0 +1,15 @@
+{
+  "name": "pokegorealtime",
+  "version": "0.0.0",
+  "dependencies": {
+    "angular": "^1.4.5",
+    "angular-messages": "~1.4.5",
+    "jquery": "^3.1.0",
+    "js-marker-clusterer": "*",
+    "moment": "momentjs#^2.14.1",
+    "materialize": "^0.97.7"
+  },
+  "devDependencies": {},
+  "appPath": "src/app",
+  "moduleName": "app"
+}

@@ -1,5 +1,6 @@
 angular
   .module('PokeGoRealtime', [])
+
   .run(function () {
 
     function isInsideCity (location, cityLocation) {
@@ -178,11 +179,15 @@ angular
 
     function getPokemons (callback) {
       function buildMarker (pokemon) {
+        var pokedexId = pokemon.pokedex_id < 10 ? '00' + pokemon.pokedex_id :
+          pokemon.pokedex_id < 100 ? '0' + pokemon.pokedex_id :
+            pokemon.pokedex_id;
+
         var marker = new google.maps.Marker({
           animation: google.maps.Animation.DROP,
           position: new google.maps.LatLng(pokemon.position.lat, pokemon.position.long),
           icon: {
-            url: pokemon.image_url,
+            url: '/static/images/pokedex/' + pokedexId + '.png',
             size: new google.maps.Size(120, 120),
             scaledSize: new google.maps.Size(60, 60),
             anchor: new google.maps.Point(30, 60),

@@ -30,7 +30,7 @@ module.exports = function (grunt) {
           ]
         } ]
       },
-      server: '.tmp'
+      start: '.tmp'
     },
 
     watch: {
@@ -42,7 +42,7 @@ module.exports = function (grunt) {
       },
       compass: {
         files: ['<%= config.app %>/styles/**/*.{scss,sass}'],
-        tasks: ['compass:server']
+        tasks: [ 'compass:start' ]
       },
       gruntfile: {
         files: ['Gruntfile.js']
@@ -75,7 +75,7 @@ module.exports = function (grunt) {
         assetCacheBuster: false,
         raw: 'Sass::Script::Number.precision = 10\n'
       },
-      server: {
+      start: {
         options: {
           sourcemap: true
         }
@@ -106,6 +106,7 @@ module.exports = function (grunt) {
               connect.static('.tmp'),
               connect().use('/bower_components', connect.static('./bower_components')),
               connect().use('/static', connect.static('src/app')),
+              connect().use('/static', connect.static('.tmp')),
               connect.static('src/app')
             ];
           }
@@ -200,9 +201,33 @@ module.exports = function (grunt) {
         files: [ {
           expand: true,
           cwd: '<%= config.app %>/images',
-          src: '**/*.{png,jpg,jpeg,gif}',
+          src: [ '**/*.{png,jpg,jpeg,gif}'
+            //, '!pokedex/**.*'
+          ],
           dest: '<%= config.tmp %>/images'
         } ]
+      }
+    },
+
+    sprite: {
+      build: {
+        src: '<%= config.app %>/images/pokedex/*.png',
+        dest: '<%= config.tmp %>/images/pokedex.png',
+        destCss: '<%= config.tmp %>/styles/sprite.css',
+        algorithm: 'left-right',
+        algorithmOpts: {
+          sort: false
+        }
+      },
+
+      start: {
+        src: '<%= config.app %>/images/pokedex/*.png',
+        dest: '.tmp/images/pokedex.png',
+        destCss: '.tmp/styles/sprite.css',
+        algorithm: 'left-right',
+        algorithmOpts: {
+          sort: false
+        }
       }
     },
 
@@ -212,8 +237,10 @@ module.exports = function (grunt) {
           collapseWhitespace: true,
           conservativeCollapse: true,
           collapseBooleanAttributes: true,
+          removeComments: true,
           removeCommentsFromCDATA: true,
-          removeOptionalTags: true
+          removeOptionalTags: true,
+          minifyJS: true,
         },
         files: [ {
           expand: true,
@@ -228,10 +255,10 @@ module.exports = function (grunt) {
 
     concurrent: {
       build: [
-        'imagemin'
+        'imagemin'//, 'sprite'
       ],
-      server: [
-        'compass:server'
+      start: [
+        'compass:start'//, 'sprite:start'
       ]
     }
   });
@@ -249,9 +276,9 @@ module.exports = function (grunt) {
     'htmlmin'
   ]);
 
-  grunt.registerTask('server', [
+  grunt.registerTask('start', [
     'clean:build',
-    'concurrent:server',
+    'concurrent:start',
     'configureProxies',
     'connect:livereload',
     'watch'

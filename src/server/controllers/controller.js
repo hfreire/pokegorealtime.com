@@ -67,7 +67,7 @@ exports.getPokemonMarkers = function (callback) {
     return {
       id: pokemon.EncounterId,
       name: pokemon.name,
-      image_url: pokemon.img,
+      pokedex_id: pokemon.PokedexTypeId,
       position: {
         lat: pokemon.Latitude,
         long: pokemon.Longitude

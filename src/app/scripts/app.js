@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016, Hugo Freire <hugo@exec.sh>.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 angular
   .module('PokeGoRealtime', [])
 
@@ -159,7 +166,7 @@ angular
 
     addYourLocationButton(map);
 
-    var pokemonIds = {};
+    var pokemonEncounterIds = {};
     var markerClusterer = new MarkerClusterer(map, [], {
       imagePath: 'static/images/markercluster/m',
       minimumClusterSize: 4
@@ -184,8 +191,9 @@ angular
             pokemon.pokedex_id;
 
         var marker = new google.maps.Marker({
+          encounter_id: pokemon.encounter_id,
           animation: google.maps.Animation.DROP,
-          position: new google.maps.LatLng(pokemon.position.lat, pokemon.position.long),
+          position: new google.maps.LatLng(pokemon.location.latitude, pokemon.location.longitude),
           icon: {
             url: '/static/images/pokedex/' + pokedexId + '.png',
             size: new google.maps.Size(120, 120),
@@ -222,8 +230,8 @@ angular
                 longitude: location.coords.longitude
               };
               var destination = {
-                latitude: pokemon.position.lat,
-                longitude: pokemon.position.long
+                latitude: pokemon.location.latitude,
+                longitude: pokemon.location.longitude
               };
 
               /*getRoute(orgin, destination);*/
@@ -270,7 +278,7 @@ angular
               markers[ i ].infowindow.close();
             }
 
-            delete pokemonIds[ markers[ i ].id ];
+            delete pokemonEncounterIds[ markers[ i ].encounter_id ];
 
             markerClusterer.removeMarker(markers[ i ]);
           }
@@ -278,23 +286,24 @@ angular
       }
 
       function addNewPokemonMarkers (pokemons) {
+        var now = new Date().getTime();
         for (var i = 0; i < pokemons.length; i++) {
+          if (pokemons[ i ].expire_at < now) continue;
           if (!pokemons[ i ]) continue; // TODO: api sending pokemon as null
-          if (!pokemonIds[ pokemons[ i ].id ]) {
+          if (!pokemonEncounterIds[ pokemons[ i ].encounter_id ]) {
             var marker = buildMarker(pokemons[ i ]);
             markerClusterer.addMarker(marker);
 
-            pokemonIds[ pokemons[ i ].id ] = true;
+            pokemonEncounterIds[ pokemons[ i ].encounter_id ] = true;
           }
         }
       }
 
-      $.get('/api/pokemons', {},
+      $.get('/api/pokemons', { latitude: 59.328152, longitude: 18.070033, radius: 20 },
         function (data) {
           cleanExpiredPokemonMarkers();
 
           return addNewPokemonMarkers(data);
-
         }, "json")
 
         .fail(function () {

@@ -31,16 +31,7 @@ var Server = {
       res.sendfile(path.resolve(__dirname + "/../app/index.html"));
     });
 
-    this._http.get('/api/gyms', function (req, res) {
-      controller.getGymMarkers(function (result) {
-        res.send(JSON.stringify(result));
-      });    });
-
-    this._http.get('/api/pokemons', function (req, res) {
-      controller.getPokemonMarkers(function (result) {
-        res.send(JSON.stringify(result));
-      });
-    });
+    this._http.get('/api/pokemons', controller.getPokemons)
 
     this._http.get('/api/routes', routeController.getRoute);
 

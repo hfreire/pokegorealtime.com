@@ -1,21 +1,22 @@
 /*
  * Copyright (c) 2016, Hugo Freire <hugo@exec.sh>.
  *
- * This source code is licensed under the license found in the 
+ * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
-var bot = require('./bot')
+const POKEMON_GO_ACCOUNTS = process.env.POKEMON_GO_ACCOUNTS ? JSON.parse(process.env.POKEMON_GO_ACCOUNTS) : []
+
+const Bot = require('./bot')(POKEMON_GO_ACCOUNTS)
+const Logger = require('./utils/logger')
 
 // shutdown gracefully
 function _shutdown () {
-  bot.stop(function () {
-    process.exit(0)
-  })
-}
-
-function _error (error) {
-  bot.report(error)
+  return Bot.stop()
+    .timeout(1000)
+    .finally(() => {
+      process.exit(0)
+    })
 }
 
 process.on('SIGINT', _shutdown)
@@ -32,7 +33,7 @@ process.on('SIGHUP', function () { // reload
 
 // stop and then shutdown, i.e. forever daemon
 process.once('SIGUSR2', function () {
-  bot.stop(function () {
+  Bot.stop(function () {
     process.kill(process.pid, 'SIGUSR2')
   })
 })
@@ -40,7 +41,11 @@ process.once('SIGUSR2', function () {
 process.on('exit', function () {
 })
 
-process.on('uncaughtException', _error)
-process.on('unhandledRejection', _error)
+process.on('uncaughtException', error => {
+  Logger.error(error.stack ? error.stack : error, _shutdown)
+})
+process.on('unhandledRejection', error => {
+  Logger.error(error.stack ? error.stack : error, _shutdown)
+})
 
-bot.start()
+Bot.start()

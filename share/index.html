@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2016, Hugo Freire <hugo@exec.sh>.
+  ~
+  ~ This source code is licensed under the license found in the
+  ~ LICENSE file in the root directory of this source tree.
+  -->
+
 <html>
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
@@ -59,7 +66,7 @@
           mapTypeId: google.maps.MapTypeId.TERRAIN
         });
 
-        var flightPlanCoordinates = spiral(59.3351613, 18.0708009, 0.0030, 64);
+          var flightPlanCoordinates = spiral(59.3157098, 18.0334394, 0.0030, 64);
         var flightPath = new google.maps.Polyline({
           path: flightPlanCoordinates,
           geodesic: true,
@@ -70,7 +77,7 @@
 
         flightPath.setMap(map);
 
-        var flightPlanCoordinates1 = spiral(59.329965,18.11813, 0.0030, 64);
+          /*var flightPlanCoordinates1 = spiral(59.329965,18.11813, 0.0030, 64);
         var flightPath1 = new google.maps.Polyline({
           path: flightPlanCoordinates1,
           geodesic: true,
@@ -112,7 +119,7 @@
           strokeWeight: 2
         });
 
-        flightPath4.setMap(map);
+           flightPath4.setMap(map);*/
       }
     </script>
     <script async defer

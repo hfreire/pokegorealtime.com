@@ -5,35 +5,63 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Bot = {
+const Promise = require('bluebird')
+const PokemonClientFactory = require('./pokemon').ClientFactory
+const Logger = require('./utils/logger')
+const Database = require('./database')
 
-  start: function(callback) {
-    console.log('Starting bot');
-
-    require('./pokemon/explorer');
-
-    if (callback) {
-      callback()
+class Bot {
+  constructor (accounts = []) {
+    if (accounts.length === 0) {
+      throw new Error('no accounts given')
     }
-  },
 
-  stop: function(callback) {
-    console.log('Stopping bot');
+    this._accounts = accounts
+  }
 
-    if (callback) {
-      callback()
+  start () {
+    Logger.info('Starting bot')
+
+    function createPokemonClient (account) {
+      PokemonClientFactory.create(account)
+        .then(client => {
+          client.on('pokemons', Database.save.bind(Database))
+          client.once('error', error => {
+            Logger.error(error.stack ? error.stack : error)
+
+            client.removeListener('pokemons', Database.save)
+
+            PokemonClientFactory.destroy(client)
+
+            setTimeout(() => {
+              createPokemonClient(account)
+            }, 30 * 1000)
+          })
+
+          account._client = client
+        })
     }
-  },
 
-  report: function (error, callback) {
-    console.error("Reporting error");
-    console.error(error);
-    console.error(error.stack ? error.stack : error.message)
+    return Database.start()
+      .then(() => {
+        return Promise.resolve(this._accounts)
+          .mapSeries(createPokemonClient.bind(this)) // TODO: find a way of not doing this
+      })
+  }
 
-    if (callback) {
-      callback()
-    }
+  stop () {
+    Logger.info('Stopping bot')
+
+    return Database.stop()
+      .then(() => {
+        return Promise.resolve(this._accounts)
+          .mapSeries(account => {
+            PokemonClientFactory.destroy(account._client)
+          })
+      })
   }
 }
 
-module.exports = Bot;
+module.exports = (accounts) => {
+  return new Bot(accounts)
+}

@@ -70,7 +70,7 @@ class Client extends EventEmitter {
           this._client.setProxy(proxy)
         }
 
-        this._client.setMapObjectsThrottlingEnabled(false)
+        this._client.setMapObjectsThrottlingEnabled(true)
 
         return this._client.init()
       })
@@ -121,7 +121,6 @@ class Client extends EventEmitter {
             })
         } else {
           this.emit('error', error)
-
         }
       })
   }
@@ -136,13 +135,15 @@ class Client extends EventEmitter {
         return mapObjects.map_cells
       })
       .each(cell => {
-        /*cell.catchable_pokemons.push({
+        /*
+         cell.catchable_pokemons.push({
          pokemon_id: 1,
          encounter_id: 1231312312313123,
          expiration_timestamp_ms: new Date().getTime() + 5*60*1000,
          latitude: 59.327152,
          longitude: 18.075033
-         })*/
+         })
+         */
 
         return Promise.resolve(cell.catchable_pokemons)
           .each(pokemon => {

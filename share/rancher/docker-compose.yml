@@ -1,0 +1,8 @@
+bot:
+  image: registry.exec.sh/pgo
+  restart: always
+  environment:
+    NODE_ENV: production
+    POKEMON_GO_ACCOUNTS:
+    REDIS:
+  command: [npm, run, bot]

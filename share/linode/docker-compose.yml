@@ -1,0 +1,17 @@
+server:
+  image: registry.exec.sh/pgo
+  restart: always
+  environment:
+    NODE_ENV: production
+    REDIS:
+  command: [npm, run, server]
+  ports:
+    - "61234:61234"
+  links:
+    - "redis"
+
+redis:
+  image: redis
+  restart: always
+  ports:
+    - "6379:6379"

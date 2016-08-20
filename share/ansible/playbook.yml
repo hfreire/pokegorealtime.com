@@ -1,0 +1,22 @@
+- hosts: localhost
+  connection: local
+  user: root
+
+  vars:
+    rancher:
+      RANCHER_URL:
+      RANCHER_ACCESS_KEY:
+      RANCHER_SECRET_KEY:
+
+  tasks:
+  - name: "Upgrade Rancher stack"
+    command: rancher-compose -p pgo up -d --force-upgrade --pull
+    args:
+      chdir: ./share/rancher
+    environment: "{{ rancher }}"
+
+  - name: "Confirm Rancher stack upgrade"
+    command: rancher-compose -p pgo up -d --upgrade --confirm-upgrade
+    args:
+      chdir: ./share/rancher
+    environment: "{{ rancher }}"

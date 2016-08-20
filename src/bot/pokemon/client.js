@@ -11,7 +11,7 @@ const PERIOD_MIN = 5
 const PERIOD_MAX = 10
 const POKEDEX = require('./pokedex').POKEDEX
 
-const pogobuf = require('./pogobuf/pogobuf')
+const pogobuf = require('pogobuf')
 
 const _ = require('lodash')
 const Promise = require('bluebird')

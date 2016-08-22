@@ -13,6 +13,12 @@
     "pogobuf": "^1.5.3"
   },
   "devDependencies": {
+    "babel-eslint": "^6.1.2",
+    "codecov": "^1.0.1",
+    "eslint": "^3.3.1",
+    "eslint-config-standard": "^5.3.5",
+    "eslint-plugin-promise": "^2.0.0",
+    "eslint-plugin-standard": "^2.0.0",
     "grunt": "^0.4.5",
     "grunt-autoprefixer": "^2.0.0",
     "grunt-concurrent": "^1.0.0",
@@ -41,14 +47,12 @@
     "grunt-text-replace": "^0.4.0",
     "grunt-usemin": "^3.0.0",
     "grunt-wiredep": "^2.0.0",
+    "istanbul": "^0.4.5",
     "karma": "^1.1.1",
     "load-grunt-tasks": "^3.1.0",
-    "time-grunt": "^1.4.0",
-    "babel-eslint": "^6.1.2",
-    "eslint-config-standard": "^5.3.5",
-    "eslint-plugin-promise": "^2.0.0",
-    "eslint-plugin-standard": "^2.0.0",
-    "standard": "^7.1.2"
+    "mocha": "^3.0.2",
+    "standard": "^7.1.2",
+    "time-grunt": "^1.4.0"
   },
   "scripts": {
     "bot": "$(which node) src/bot/app.js",
@@ -56,7 +60,7 @@
     "build": "$(which docker) build -t registry.exec.sh/pgo -f ./share/docker/Dockerfile .",
     "push": "$(which docker) push registry.exec.sh/pgo",
     "deploy": "$(which ansible-playbook) -i ./share/ansible/hosts ./share/ansible/playbook.yml",
-    "test": "$(which eslint) src"
+    "test": "node_modules/.bin/eslint src && node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && node_modules/.bin/codecov"
   },
   "author": "",
   "license": "ISC"

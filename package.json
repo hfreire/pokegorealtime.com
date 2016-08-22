@@ -56,7 +56,7 @@
     "build": "$(which docker) build -t registry.exec.sh/pgo -f ./share/docker/Dockerfile .",
     "push": "$(which docker) push registry.exec.sh/pgo",
     "deploy": "$(which ansible-playbook) -i ./share/ansible/hosts ./share/ansible/playbook.yml",
-    "test": "standard"
+    "test": "$(which eslint) src"
   },
   "author": "",
   "license": "ISC"

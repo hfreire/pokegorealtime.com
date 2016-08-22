@@ -8,9 +8,7 @@
 const _ = require('lodash')
 
 class RouteGenerator {
-
   generate (latitude, longitude, stepSize, stepLimit) {
-
     if (!latitude || !longitude) {
       throw new Error('invalid parameters')
     }
@@ -27,7 +25,6 @@ class RouteGenerator {
 
   reverse (route) {
     if (route && route.path) {
-
       route._current = 1
 
       _.reverse(route.path)
@@ -50,7 +47,11 @@ class RouteGenerator {
 
   _generateSpiral (latitude, longitude, stepSize, stepLimit) {
     let coords = [ { latitude: latitude, longitude: longitude } ]
-    let steps = 1, x = 0, y = 0, d = 1, m = 1
+    let steps = 1
+    let x = 0
+    let y = 0
+    let d = 1
+    let m = 1
     let rlow = 0.0
     let rhigh = 0.0005
 
@@ -72,7 +73,6 @@ class RouteGenerator {
 
       d = -1 * d
       m = m + 1
-
     }
     return coords
   }

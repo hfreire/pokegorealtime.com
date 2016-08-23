@@ -1,5 +1,6 @@
 # Discover :mag_right::earth_africa: Pokémons (Pokémon GO) nearby in realtime :clock1:
 
+[![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![][travis img]][travis]
 [![][release img]][release]
 [![][license img]][license]

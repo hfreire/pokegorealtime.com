@@ -1,5 +1,7 @@
 # Discover :mag_right::earth_africa: Pokémons (Pokémon GO) nearby in realtime :clock1:
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/hfreire/pokegorealtime.com.svg)](https://greenkeeper.io/)
+
 [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![][travis img]][travis]
 [![][release img]][release]
